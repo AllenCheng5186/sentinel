@@ -10,9 +10,6 @@ const pool = new Pool({
     database: 'network_data',
     password: 'HVA6yuf0rgc1mpz-fqb',
     port: 5432,
-    ssl: {
-        rejectUnauthorized: false  // For development only. In production, supply proper certificates.
-    },
 });
 
 /**

@@ -1,9 +1,9 @@
 // server.js
 const express = require('express');
 const bodyParser = require('body-parser');
-const metricsRouter = require('./routes/metrics');       // Your existing metrics endpoints
-const logsRouter = require('./routes/logs');             // The previous basic logs processing
-const detailedMetricsRouter = require('./routes/detailedMetrics'); // New detailed metrics endpoint
+const metricsRouter = require('./routes/metrics');
+const logsRouter = require('./routes/logs');
+const detailedMetricsRouter = require('./routes/detailedMetrics');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,9 +11,9 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // Mount endpoints
-app.use('/api/metrics', metricsRouter);
-app.use('/api/logs', logsRouter);
-app.use('/api/detailed_metrics', detailedMetricsRouter);
+app.use('/api/metrics', metricsRouter);     // directly insert the data
+app.use('/api/logs', logsRouter);           // calculate from the data
+app.use('/api/detailed_metrics', detailedMetricsRouter); // add data to DB
 
 app.get('/', (req, res) => {
     res.send('Network Activity API is running.');
