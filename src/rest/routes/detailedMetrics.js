@@ -38,7 +38,8 @@ const ipv4Regex = /^(\d{1,3}(?:\.\d{1,3}){3})$/;
 // Regex to match a typical Nginx access log line with an extra field.
 // Expected format:
 //   client_ip - - [timestamp] "HTTP_METHOD RESOURCE_PATH [HTTP_VERSION]" status_code response_size "user_agent" "forwarded_ip"
-const logRegex = /^(\d{1,3}(?:\.\d{1,3}){3})\s+-\s+-\s+\[([^\]]+)\]\s+"(\S+)\s+(\S+)(?:\s+\S+)?\"\s+(\d{3})\s+(\d+)\s+"([^"]*)"\s+"([^"]*)"/;
+// const logRegex = /^(\d{1,3}(?:\.\d{1,3}){3})\s+-\s+-\s+\[([^\]]+)\]\s+"(\S+)\s+(\S+)(?:\s+\S+)?\"\s+(\d{3})\s+(\d+)\s+"([^"]*)"\s+"([^"]*)"\s+"([^"]*)"/;
+const logRegex = /^(\d{1,3}(?:\.\d{1,3}){3})\s+(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+"(\S+)\s+(\S+)(?:\s+\S+)?\"\s+(\d{3})\s+(\d+)\s+"([^"]*)"\s+"([^"]*)"\s+"([^"]*)"/;
 
 router.post('/', upload.single('logfile'), async (req, res) => {
     if (!req.file) {
@@ -61,18 +62,20 @@ router.post('/', upload.single('logfile'), async (req, res) => {
         const match = logRegex.exec(line);
         if (!match) {
             // Optionally log the non-matching line.
-            console.warn('Log line did not match expected format:', line);
+            // console.warn('Log line did not match expected format:', line);
             continue;
         }
 
         const clientIp = match[1];
-        const timestampStr = match[2];
-        const httpMethod = match[3];
-        const resourcePath = match[4];
-        const statusCode = parseInt(match[5], 10);
-        const responseSize = parseInt(match[6], 10);
-        const userAgent = match[7];
-        let forwardedIp = match[8];
+        const remoteName  = match[2];
+        const authUser    = match[3];
+        const timestampStr = match[4];
+        const httpMethod = match[5];
+        const resourcePath = match[6];
+        const statusCode = parseInt(match[7], 10);
+        const responseSize = parseInt(match[8], 10);
+        const userAgent = match[10];
+        let forwardedIp = match[11];
 
         // Validate the forwarded IP field.
         // If it does not match an IPv4 address (or is "-"), set it to null.
@@ -101,7 +104,7 @@ router.post('/', upload.single('logfile'), async (req, res) => {
             );
             insertedCount++;
         } catch (err) {
-            console.error('Error inserting log entry:', err);
+            // console.error('Error inserting log entry:', err);
             errors.push({ line, error: err.message });
         }
     }
