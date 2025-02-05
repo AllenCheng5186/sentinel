@@ -1,0 +1,54 @@
+/* src/StatsGrid.css */
+
+.stats-grid-container {
+    margin: 20px;
+    /*background-color: #f5f5f5;*/
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.stats-grid-container h2 {
+    margin-bottom: 10px;
+}
+
+.stats-grid {
+    display: grid;
+    /* Two rows, four columns each: */
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 20px; /* space between cards */
+}
+
+.stat-card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid #ccc;
+}
+
+.stat-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.stat-panel-title {
+    text-align: left;
+    font-size: 18px;
+}
+
+.stat-card-title {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.stat-card-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+}
