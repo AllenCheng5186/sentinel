@@ -17,6 +17,7 @@ import {
   Legend,
 } from 'chart.js';
 import StatsGridPanel from "./Grid/StatsGridPanel.jsx";
+import IpRankChart from "./ipRank.jsx";
 
 // Register Chart.js components
 ChartJS.register(
@@ -63,8 +64,19 @@ const Dashboard = () => {
   const [dateStart, setDateStart] = useState('');
   const [dateEnd, setDateEnd] = useState('');
   const [interval, setInterval] = useState('minute');
-
   const [validDates, setValidDates] = useState([]);
+
+  function formatLabel(ts, interval) {
+    const dateObj = new Date(ts);
+    if (interval === 'day') {
+      // show just the date, e.g. "5/23/2024"
+      return dateObj.toLocaleDateString();
+    } else {
+      // for second/minute/hour intervals, show time or date+time
+      return dateObj.toLocaleTimeString();
+    }
+  }
+
 
 
   // Fetch the distinct days from /api/date_ranges
@@ -108,9 +120,10 @@ const Dashboard = () => {
       data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
       // Prepare a shared labels array for the x-axis
-      const timeLabels = data.map(d => new Date(d.timestamp).toLocaleTimeString());
+      // const timeLabels = data.map(d => new Date(d.timestamp).toLocaleTimeString());
+      const labels = data.map(item => formatLabel(item.timestamp, interval));
 
-      setLabels(timeLabels);
+      setLabels(labels);
 
       setRequestsData(data.map(d => d.requests));
       setActiveUsersData(data.map(d => d.active_users));
@@ -235,9 +248,18 @@ const Dashboard = () => {
     setEndDay(date);
   };
 
+  function formatLabel(timestamp) {
+    const d = new Date(timestamp);
+    if (interval === 'day') {
+      return d.toLocaleDateString(); // e.g. "5/23/2024"
+    } else {
+      return d.toLocaleTimeString(); // e.g. "12:15:32 PM"
+    }
+  }
+
   return (
       <div className="dashboard">
-        <h1>Date Range Dashboard (4 Charts)</h1>
+        <h1>Sentinel Dashboard</h1>
         <StatsGridPanel startDay={dateStart} endDay={dateEnd}/>
 
         <div className="date-selection">
@@ -306,6 +328,13 @@ const Dashboard = () => {
           <div className="chart-card">
             <h3>Error Rate</h3>
             <Line data={errorRateChartData} options={chartOptions} />
+          </div>
+
+          <div className="chart-card">
+            <h3>Top 10 IPs</h3>
+            <div className="ip-rank-chart">
+              <IpRankChart />
+            </div>
           </div>
         </div>
       </div>

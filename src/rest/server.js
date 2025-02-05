@@ -23,6 +23,9 @@ app.use('/api/aggregated_metrics', aggregatedMetricsRouter);
 app.use('/api/summary', summaryRouter);
 app.use('/api/date_ranges', dateRangesRouter);
 
+const ipRankRouter = require('./routes/ipRank');
+app.use('/api/ip_rank', ipRankRouter);
+
 app.get('/', (req, res) => {
     res.send('Network Activity API is running.');
 });
